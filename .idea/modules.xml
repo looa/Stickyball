@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/StickyballTest.iml" filepath="$PROJECT_DIR$/StickyballTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/samples/samples.iml" filepath="$PROJECT_DIR$/samples/samples.iml" />
+      <module fileurl="file://$PROJECT_DIR$/stickyballView/stickyballview.iml" filepath="$PROJECT_DIR$/stickyballView/stickyballview.iml" />
+    </modules>
+  </component>
+</project>
