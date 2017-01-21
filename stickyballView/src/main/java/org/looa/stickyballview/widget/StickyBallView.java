@@ -75,7 +75,7 @@ public class StickyBallView extends View {
     private void resetPath(PointF pointSource, PointF pointTarget) {
         float offX = pointSource.x - pointTarget.x;
         float offY = pointSource.y - pointTarget.y;
-        double k = offX != 0 ? offY / offX : 0;
+        double k = offY / offX;
 
         points = GeometryUtil.getIntersectionPoints(pointTarget, pointSource, mMoveRadius, mRadius, k);
 
