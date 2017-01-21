@@ -15,6 +15,7 @@ import org.looa.stickyballview.widget.StickyBallView;
 public class MainActivity extends Activity implements View.OnClickListener, Animator.AnimatorListener, StickyBallView.OnTranslationListener {
 
     private StickyBallView ballView;
+    private int translationX = 80;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,25 +30,25 @@ public class MainActivity extends Activity implements View.OnClickListener, Anim
 
     private long time = 400;
     private AnimatorSet set;
-    ObjectAnimator animator, animatorSource, animatorSource2;
+    ObjectAnimator animator, animatorSource, animatorSourceScale;
 
     @Override
     public void onClick(View v) {
         if (set != null && set.isRunning()) return;
         if (animator == null) {
-            animator = ObjectAnimator.ofFloat(ballView, "targetTranslationX", 0, 50);
+            animator = ObjectAnimator.ofFloat(ballView, "targetTranslationX", 0, translationX);
             animator.setInterpolator(new DecelerateInterpolator());
             animator.setDuration(time);
-            animatorSource = ObjectAnimator.ofFloat(ballView, "sourceTranslationX", 0, 50);
+            animatorSource = ObjectAnimator.ofFloat(ballView, "sourceTranslationX", 0, translationX);
             animatorSource.setInterpolator(new OvershootInterpolator(1.3f));
             animatorSource.setStartDelay((long) (time * 0.8f));
             animatorSource.setDuration(time);
-            animatorSource2 = ObjectAnimator.ofFloat(ballView, "sourceRadius", 10, 0);
-            animatorSource2.setInterpolator(new DecelerateInterpolator());
-            animatorSource2.setDuration(time + (long) (time * 0.8f));
+            animatorSourceScale = ObjectAnimator.ofFloat(ballView, "sourceRadius", 10, 0);
+            animatorSourceScale.setInterpolator(new DecelerateInterpolator());
+            animatorSourceScale.setDuration(time + (long) (time * 0.8f));
         }
         set = new AnimatorSet();
-        set.play(animator).with(animatorSource).with(animatorSource2);
+        set.play(animator).with(animatorSource).with(animatorSourceScale);
         set.start();
         set.addListener(this);
     }
@@ -77,7 +78,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Anim
 
     @Override
     public void onSourceTranslation(float dX, float dY) {
-        if (dX >= 45) {
+        if (Math.abs(dX) >= Math.abs(translationX)) {
             ballView.setSourceRadius(10);
         }
     }

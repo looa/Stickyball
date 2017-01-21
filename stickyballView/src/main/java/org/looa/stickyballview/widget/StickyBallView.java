@@ -12,6 +12,10 @@ import android.view.View;
 import org.looa.stickyballview.utils.GeometryUtil;
 
 /**
+ * 粘性球View，分为原点和目标点两部分；
+ * 其中，原点是被动移动点，目标点是主动移动点；
+ * 两个点最开始是重合的，可以通过设置偏移量来改变目标点和原点的相对位置；
+ * <p>
  * Created by ranxiangwei on 2017/1/19.
  */
 
@@ -21,8 +25,8 @@ public class StickyBallView extends View {
 
     private PointF pointSource, pointTarget;//原点、目标点
     private PointF pointSourceCache, pointTargetCache;//保存原点、目标点数据
-    private PointF[] pointSources, pointTargets;//贝塞尔介质各点
-    private PointF pointControl, pointControl2;
+    private PointF[] points;//贝塞尔介质各点
+    private PointF pointControl;
 
     private Path movePath;
 
@@ -73,22 +77,16 @@ public class StickyBallView extends View {
         float offY = pointSource.y - pointTarget.y;
         double k = offX != 0 ? offY / offX : 0;
 
-        pointSources = GeometryUtil.getIntersectionPoints(pointSource, mRadius, k, true);
-        pointTargets = GeometryUtil.getIntersectionPoints(pointTarget, mMoveRadius, k, false);
+        points = GeometryUtil.getIntersectionPoints(pointTarget, pointSource, mMoveRadius, mRadius, k);
 
-        pointControl = GeometryUtil.getMiddlePoint(pointSource, pointTarget);
-        pointControl2 = GeometryUtil.getMiddlePoint(pointSource, pointTarget);
-
-        //中间变得更细
-        pointControl.set(pointControl.x, pointControl.y - 1);
-        pointControl2.set(pointControl2.x, pointControl2.y + 1);
+        pointControl = GeometryUtil.getControlPoint(pointTarget, pointSource, mMoveRadius, mRadius);
 
         if (movePath == null) movePath = new Path();
         movePath.reset();
-        movePath.moveTo(pointSources[0].x, pointSources[0].y);
-        movePath.quadTo(pointControl.x, pointControl.y, pointTargets[0].x, pointTargets[0].y);
-        movePath.lineTo(pointTargets[1].x, pointTargets[1].y);
-        movePath.quadTo(pointControl2.x, pointControl2.y, pointSources[1].x, pointSources[1].y);
+        movePath.moveTo(points[1].x, points[1].y);
+        movePath.quadTo(pointControl.x, pointControl.y, points[0].x, points[0].y);
+        movePath.lineTo(points[2].x, points[2].y);
+        movePath.quadTo(pointControl.x, pointControl.y, points[3].x, points[3].y);
         movePath.close();
     }
 
@@ -126,14 +124,25 @@ public class StickyBallView extends View {
         invalidate();
     }
 
+    /**
+     * 更新原点的缓存位置（缓存位置代表改点初始化的位置，如果在平移之后需要保持在最新位置，应该调用该方法）
+     */
     public void updateSourceCache() {
         pointSourceCache.set(pointSource.x, pointSource.y);
     }
 
+    /**
+     * 更新目标点的缓存位置（缓存位置代表改点初始化的位置，如果在平移之后需要保持在最新位置，应该调用该方法）
+     */
     public void updateTargetCache() {
         pointTargetCache.set(pointTarget.x, pointTarget.y);
     }
 
+    /**
+     * 设置原点的x轴平移量
+     *
+     * @param dX x轴平移量
+     */
     public void setSourceTranslationX(float dX) {
         pointSource.set(pointSourceCache.x + dX, pointSource.y);
         if (listener != null) listener.onSourceTranslation(dX, 0);
@@ -141,6 +150,11 @@ public class StickyBallView extends View {
         invalidate();
     }
 
+    /**
+     * 设置原点的y轴平移量
+     *
+     * @param dY y轴平移量
+     */
     public void setSourceTranslationY(float dY) {
         pointSource.set(pointSource.x, pointSourceCache.y + dY);
         if (listener != null) listener.onSourceTranslation(0, dY);
@@ -148,6 +162,11 @@ public class StickyBallView extends View {
         invalidate();
     }
 
+    /**
+     * 设置目标点的x轴平移量
+     *
+     * @param dX x轴平移量
+     */
     public void setTargetTranslationX(float dX) {
         pointTarget.set(pointTargetCache.x + dX, pointTarget.y);
         if (listener != null) listener.onTargetTranslation(dX, 0);
@@ -155,6 +174,11 @@ public class StickyBallView extends View {
         invalidate();
     }
 
+    /**
+     * 设置目标点的y轴平移量
+     *
+     * @param dY y轴平移量
+     */
     public void setTargetTranslationY(float dY) {
         pointTarget.set(pointTarget.x, pointTargetCache.y + dY);
         if (listener != null) listener.onTargetTranslation(0, dY);
