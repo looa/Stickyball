@@ -8,6 +8,7 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Toast;
 
 import org.looa.stickyballview.utils.GeometryUtil;
 
@@ -19,7 +20,7 @@ import org.looa.stickyballview.utils.GeometryUtil;
  * Created by ranxiangwei on 2017/1/19.
  */
 
-public class StickyBallView extends View {
+public class StickyBallView extends View implements ISelectedView {
 
     private Paint paintBall;
 
@@ -184,6 +185,16 @@ public class StickyBallView extends View {
         if (listener != null) listener.onTargetTranslation(0, dY);
         resetPath(pointSource, pointTarget);
         invalidate();
+    }
+
+    @Override
+    public void onCreatedIndicator(DotIndicatorInfo info) {
+
+    }
+
+    @Override
+    public void onSelected(int position) {
+        Toast.makeText(getContext(), "position - " + position, Toast.LENGTH_SHORT).show();
     }
 
     public interface OnTranslationListener {

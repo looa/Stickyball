@@ -10,6 +10,7 @@ import android.view.Window;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 
+import org.looa.stickyballview.widget.DotIndicatorView;
 import org.looa.stickyballview.widget.StickyBallView;
 
 public class MainActivity extends Activity implements View.OnClickListener, Animator.AnimatorListener, StickyBallView.OnTranslationListener {
@@ -22,9 +23,12 @@ public class MainActivity extends Activity implements View.OnClickListener, Anim
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         ballView = new StickyBallView(this);
-        setContentView(ballView);
         ballView.setOnClickListener(this);
         ballView.setOnTranslationListener(this);
+        setContentView(R.layout.activity_main);
+        DotIndicatorView dv = (DotIndicatorView) findViewById(R.id.dv_sample);
+        dv.setSelectedView(ballView);
+        dv.setCurrentItem(2);
     }
 
 
