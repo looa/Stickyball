@@ -37,6 +37,7 @@ public class DotIndicatorView extends RelativeLayout {
     private PointF[] dotPoints;
 
     private ISelectedView selectedView;
+    private LayoutParams selectedViewParams;
     private DotIndicatorInfo info;
 
     public DotIndicatorView(Context context) {
@@ -84,6 +85,8 @@ public class DotIndicatorView extends RelativeLayout {
             float y = paddingTop + dotRadius;
             dotPoints[i] = new PointF(x, y);
         }
+
+        selectedViewParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
     }
 
     public void setCurrentItem(int position) {
@@ -94,7 +97,7 @@ public class DotIndicatorView extends RelativeLayout {
         this.selectedView = selectedView;
         if (selectedView != null) {
             if (selectedView instanceof View) {
-                addView((View) selectedView);
+                addView((View) selectedView, selectedViewParams);
             }
             if (info == null) info = new DotIndicatorInfo();
             info.setColorSelected(colorSelected);
@@ -157,6 +160,7 @@ public class DotIndicatorView extends RelativeLayout {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int measuredWidth = measureWidth(widthMeasureSpec);
         int measuredHeight = measureHeight(heightMeasureSpec);
         setMeasuredDimension(measuredWidth, measuredHeight);

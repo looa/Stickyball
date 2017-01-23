@@ -34,11 +34,13 @@ public class StickyBallView extends View implements ISelectedView {
     private final static int DEFAULT_COLOR = Color.parseColor("#acacac");
     private int color = DEFAULT_COLOR;
 
-    private float mCircleCenter = 150f;
+    private float mCircleCenter = 10f;
     private float mRadius = 10f;//直径
 
-    private float mMoveCircleCenter = 150f;
+    private float mMoveCircleCenter = 10f;
     private float mMoveRadius = 10f;//直径
+
+    private DotIndicatorInfo info;
 
     private OnTranslationListener listener;
 
@@ -189,12 +191,20 @@ public class StickyBallView extends View implements ISelectedView {
 
     @Override
     public void onCreatedIndicator(DotIndicatorInfo info) {
-
+        this.info = info;
+        pointSource.set(info.getDotRadius() + info.getPaddingLeft(), info.getDotRadius() + info.getPaddingTop());
+        pointSourceCache.set(pointSource.x, pointSource.y);
+        pointTarget.set(pointSource.x, pointSource.y);
+        pointTargetCache.set(pointSource.x, pointSource.y);
+        paintBall.setColor(info.getColorSelected());
+        mRadius = mMoveRadius = info.getDotRadius();
+        resetPath(pointSource, pointTarget);
+        invalidate();
+        Toast.makeText(getContext(), "count=" + info.getDotCount(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onSelected(int position) {
-        Toast.makeText(getContext(), "position - " + position, Toast.LENGTH_SHORT).show();
     }
 
     public interface OnTranslationListener {

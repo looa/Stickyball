@@ -13,7 +13,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        app:color_selected="@color/colorPrimary"
+        android:padding="30dp"
+        app:color_selected="@color/colorAccent"
         app:dot_center_distance="16dp"
         app:dot_count="5" />
+
+    <org.looa.stickyballview.widget.StickyBallView
+        android:id="@+id/sb_sample"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:background="#f0f0f0" />
 </RelativeLayout>

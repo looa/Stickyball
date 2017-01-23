@@ -6,7 +6,6 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 
@@ -16,19 +15,22 @@ import org.looa.stickyballview.widget.StickyBallView;
 public class MainActivity extends Activity implements View.OnClickListener, Animator.AnimatorListener, StickyBallView.OnTranslationListener {
 
     private StickyBallView ballView;
+    private DotIndicatorView dv;
     private int translationX = 50;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
         ballView = new StickyBallView(this);
+
         ballView.setOnClickListener(this);
         ballView.setOnTranslationListener(this);
-        setContentView(R.layout.activity_main);
-        DotIndicatorView dv = (DotIndicatorView) findViewById(R.id.dv_sample);
+
+        dv = (DotIndicatorView) findViewById(R.id.dv_sample);
         dv.setSelectedView(ballView);
-        dv.setCurrentItem(2);
+        dv.setOnClickListener(this);
     }
 
 
@@ -61,7 +63,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Anim
             animatorSourceScale.setDuration(time + (long) (time * 0.8f));
         }
         set = new AnimatorSet();
-        set.play(animatorSourceScale).with(animator2).with(animatorSource2);
+        set.play(animatorSourceScale).with(animator).with(animatorSource);
         set.start();
         set.addListener(this);
     }
