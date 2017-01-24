@@ -8,19 +8,74 @@
     android:background="@android:color/white"
     tools:context="org.looa.stickyballtest.MainActivity">
 
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dv_sample"
+        android:layout_marginLeft="46dp"
+        android:layout_marginStart="46dp"
+        android:layout_marginTop="84dp"
+        android:layout_toEndOf="@+id/sb_sample"
+        android:layout_toRightOf="@+id/sb_sample"
+        android:text="Button1" />
+
+
     <org.looa.stickyballview.widget.DotIndicatorView
         android:id="@+id/dv_sample"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:padding="30dp"
-        app:color_selected="@color/colorAccent"
-        app:dot_center_distance="16dp"
-        app:dot_count="5" />
+        app:color_selected="#666666"
+        app:color_unselected="#a9a9a9"
+        app:dot_center_distance="20dp"
+        app:dot_count="5"
+        app:dot_radius="4dp" />
 
     <org.looa.stickyballview.widget.StickyBallView
         android:id="@+id/sb_sample"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:background="#f0f0f0" />
+
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/button1"
+        android:layout_alignStart="@+id/button1"
+        android:layout_below="@+id/button1"
+        android:layout_marginTop="48dp"
+        android:text="Button2" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/button1"
+        android:layout_centerHorizontal="true"
+        android:text="Button3" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/button2"
+        android:layout_alignLeft="@+id/button3"
+        android:layout_alignStart="@+id/button3"
+        android:text="Button4" />
+
+    <Button
+        android:id="@+id/button5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/button3"
+        android:layout_marginLeft="31dp"
+        android:layout_marginStart="31dp"
+        android:layout_toEndOf="@+id/button3"
+        android:layout_toRightOf="@+id/button3"
+        android:text="Button5" />
+
 </RelativeLayout>

@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.RelativeLayout;
 
 import org.looa.stickyballview.R;
@@ -40,6 +39,11 @@ public class DotIndicatorView extends RelativeLayout {
     private LayoutParams selectedViewParams;
     private DotIndicatorInfo info;
 
+    public static ISelectedView NORMAL_BALL;
+    public static ISelectedView STICKY_BALL;
+
+    private int position = 0;
+
     public DotIndicatorView(Context context) {
         this(context, null);
     }
@@ -55,6 +59,8 @@ public class DotIndicatorView extends RelativeLayout {
         DEFAULT_DOT_RADIUS = DimensionUtil.dip2px(getContext(), 3);
         initAttrs(attrs);
         initData();
+        setClipChildren(false);
+        setClipToPadding(false);
     }
 
     private void initAttrs(AttributeSet attrs) {
@@ -87,24 +93,32 @@ public class DotIndicatorView extends RelativeLayout {
         }
 
         selectedViewParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+
+        STICKY_BALL = new SelectedStickyBall(getContext());
     }
 
     public void setCurrentItem(int position) {
+        this.position = position;
         if (selectedView != null) selectedView.onSelected(position);
     }
 
     public void setSelectedView(ISelectedView selectedView) {
         this.selectedView = selectedView;
         if (selectedView != null) {
-            if (selectedView instanceof View) {
-                addView((View) selectedView, selectedViewParams);
-            }
+
+            addView(selectedView.getView(this), selectedViewParams);
+
             if (info == null) info = new DotIndicatorInfo();
             info.setColorSelected(colorSelected);
             info.setDotCenterDistance(dotCenterDistance);
             info.setDotCount(dotCount);
             info.setDotRadius(dotRadius);
             info.setDotPoints(dotPoints);
+            info.setPosition(position);
+            info.setPaddingLeft(paddingLeft);
+            info.setPaddingTop(paddingTop);
+            info.setPaddingRight(paddingRight);
+            info.setPaddingBottom(paddingBottom);
             selectedView.onCreatedIndicator(info);
         }
     }

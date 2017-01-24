@@ -8,7 +8,6 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.Toast;
 
 import org.looa.stickyballview.utils.GeometryUtil;
 
@@ -20,7 +19,7 @@ import org.looa.stickyballview.utils.GeometryUtil;
  * Created by ranxiangwei on 2017/1/19.
  */
 
-public class StickyBallView extends View implements ISelectedView {
+public class StickyBallView extends View {
 
     private Paint paintBall;
 
@@ -31,7 +30,7 @@ public class StickyBallView extends View implements ISelectedView {
 
     private Path movePath;
 
-    private final static int DEFAULT_COLOR = Color.parseColor("#acacac");
+    private final static int DEFAULT_COLOR = Color.parseColor("#FF4081");
     private int color = DEFAULT_COLOR;
 
     private float mCircleCenter = 10f;
@@ -39,8 +38,6 @@ public class StickyBallView extends View implements ISelectedView {
 
     private float mMoveCircleCenter = 10f;
     private float mMoveRadius = 10f;//直径
-
-    private DotIndicatorInfo info;
 
     private OnTranslationListener listener;
 
@@ -59,6 +56,8 @@ public class StickyBallView extends View implements ISelectedView {
 
     public void setColor(int color) {
         this.color = color;
+        if (paintBall != null) paintBall.setColor(color);
+        invalidate();
     }
 
     private void init() {
@@ -113,17 +112,15 @@ public class StickyBallView extends View implements ISelectedView {
         invalidate();
     }
 
-    public void setSourceXY(float[] sourceXY) {
-        if (sourceXY == null || sourceXY.length != 2) return;
-        pointSource.set(sourceXY[0], sourceXY[1]);
-        pointSourceCache.set(sourceXY[0], sourceXY[1]);
+    public void setSourceXY(float sourceX, float sourceY) {
+        pointSource.set(sourceX, sourceY);
+        pointSourceCache.set(sourceX, sourceY);
         invalidate();
     }
 
-    public void setTargetXY(float[] targetXY) {
-        if (targetXY == null || targetXY.length != 2) return;
-        pointTarget.set(targetXY[0], targetXY[1]);
-        pointTargetCache.set(targetXY[0], targetXY[1]);
+    public void setTargetXY(float targetX, float targetY) {
+        pointTarget.set(targetX, targetY);
+        pointTargetCache.set(targetX, targetY);
         invalidate();
     }
 
@@ -189,23 +186,6 @@ public class StickyBallView extends View implements ISelectedView {
         invalidate();
     }
 
-    @Override
-    public void onCreatedIndicator(DotIndicatorInfo info) {
-        this.info = info;
-        pointSource.set(info.getDotRadius() + info.getPaddingLeft(), info.getDotRadius() + info.getPaddingTop());
-        pointSourceCache.set(pointSource.x, pointSource.y);
-        pointTarget.set(pointSource.x, pointSource.y);
-        pointTargetCache.set(pointSource.x, pointSource.y);
-        paintBall.setColor(info.getColorSelected());
-        mRadius = mMoveRadius = info.getDotRadius();
-        resetPath(pointSource, pointTarget);
-        invalidate();
-        Toast.makeText(getContext(), "count=" + info.getDotCount(), Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onSelected(int position) {
-    }
 
     public interface OnTranslationListener {
         void onSourceTranslation(float dX, float dY);

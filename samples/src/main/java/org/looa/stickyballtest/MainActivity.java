@@ -1,105 +1,48 @@
 package org.looa.stickyballtest;
 
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.OvershootInterpolator;
+import android.widget.Button;
 
 import org.looa.stickyballview.widget.DotIndicatorView;
-import org.looa.stickyballview.widget.StickyBallView;
 
-public class MainActivity extends Activity implements View.OnClickListener, Animator.AnimatorListener, StickyBallView.OnTranslationListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private StickyBallView ballView;
     private DotIndicatorView dv;
-    private int translationX = 50;
+    private Button button1, button2, button3, button4, button5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ballView = new StickyBallView(this);
-
-        ballView.setOnClickListener(this);
-        ballView.setOnTranslationListener(this);
-
         dv = (DotIndicatorView) findViewById(R.id.dv_sample);
-        dv.setSelectedView(ballView);
+        dv.setSelectedView(DotIndicatorView.STICKY_BALL);
         dv.setOnClickListener(this);
+
+        button1 = (Button) findViewById(R.id.button1);
+        button2 = (Button) findViewById(R.id.button2);
+        button3 = (Button) findViewById(R.id.button3);
+        button4 = (Button) findViewById(R.id.button4);
+        button5 = (Button) findViewById(R.id.button5);
+
+        button1.setTag(1);
+        button2.setTag(2);
+        button3.setTag(3);
+        button4.setTag(4);
+        button5.setTag(5);
+
+
+        button1.setOnClickListener(this);
+        button2.setOnClickListener(this);
+        button3.setOnClickListener(this);
+        button4.setOnClickListener(this);
+        button5.setOnClickListener(this);
     }
-
-
-    private long time = 350;
-    private AnimatorSet set;
-    ObjectAnimator animator, animatorSource, animatorSourceScale, animator2, animatorSource2;
 
     @Override
     public void onClick(View v) {
-        if (set != null && set.isRunning()) return;
-        if (animator == null) {
-            animator = ObjectAnimator.ofFloat(ballView, "targetTranslationX", 0, translationX);
-            animator.setInterpolator(new DecelerateInterpolator());
-            animator.setDuration(time);
-            animatorSource = ObjectAnimator.ofFloat(ballView, "sourceTranslationX", 0, translationX);
-            animatorSource.setInterpolator(new OvershootInterpolator(1.3f));
-            animatorSource.setStartDelay((long) (time * 0.8f));
-            animatorSource.setDuration(time);
-
-            animator2 = ObjectAnimator.ofFloat(ballView, "targetTranslationY", 0, translationX);
-            animator2.setInterpolator(new DecelerateInterpolator());
-            animator2.setDuration(time);
-            animatorSource2 = ObjectAnimator.ofFloat(ballView, "sourceTranslationY", 0, translationX);
-            animatorSource2.setInterpolator(new OvershootInterpolator(1.3f));
-            animatorSource2.setStartDelay((long) (time * 0.8f));
-            animatorSource2.setDuration(time);
-
-            animatorSourceScale = ObjectAnimator.ofFloat(ballView, "sourceRadius", 10, 0);
-            animatorSourceScale.setInterpolator(new DecelerateInterpolator());
-            animatorSourceScale.setDuration(time + (long) (time * 0.8f));
-        }
-        set = new AnimatorSet();
-        set.play(animatorSourceScale).with(animator).with(animatorSource);
-        set.start();
-        set.addListener(this);
-    }
-
-
-    @Override
-    public void onAnimationStart(Animator animation) {
-
-    }
-
-    @Override
-    public void onAnimationEnd(Animator animation) {
-        ballView.updateSourceCache();
-        ballView.updateTargetCache();
-        ballView.setSourceRadius(10);
-    }
-
-    @Override
-    public void onAnimationCancel(Animator animation) {
-
-    }
-
-    @Override
-    public void onAnimationRepeat(Animator animation) {
-
-    }
-
-    @Override
-    public void onSourceTranslation(float dX, float dY) {
-        if (Math.abs(dX) >= Math.abs(translationX) || Math.abs(dY) >= Math.abs(translationX)) {
-            ballView.setSourceRadius(10);
-        }
-    }
-
-    @Override
-    public void onTargetTranslation(float dX, float dY) {
-
+        dv.setCurrentItem((Integer) v.getTag() - 1);
     }
 }

@@ -16,6 +16,7 @@ public class DotIndicatorInfo {
     private int paddingLeft, paddingTop, paddingRight, paddingBottom;
 
     private PointF[] dotPoints;
+    private int position;
 
     public int getColorSelected() {
         return colorSelected;
@@ -87,5 +88,13 @@ public class DotIndicatorInfo {
 
     public void setDotPoints(PointF[] dotPoints) {
         this.dotPoints = dotPoints;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 }
