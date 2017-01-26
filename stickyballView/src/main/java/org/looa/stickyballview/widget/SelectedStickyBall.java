@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 
+import java.util.LinkedList;
+
 /**
  * Created by ran on 2017/1/24.
  */
@@ -25,9 +27,12 @@ public class SelectedStickyBall implements ISelectedView, Animator.AnimatorListe
 
     private int prePosition;
 
+    private LinkedList<Integer> positionQueue;
+
     public SelectedStickyBall(Context context) {
         ballView = new StickyBallView(context);
         ballView.setOnTranslationListener(this);
+        positionQueue = new LinkedList<>();
     }
 
     @Override
@@ -44,13 +49,21 @@ public class SelectedStickyBall implements ISelectedView, Animator.AnimatorListe
 
     @Override
     public void onSelected(int position) {
-        if (set != null && set.isRunning() || prePosition == position) return;
+        if (prePosition == position) return;
+        positionQueue.offer(position);
+        start();
+    }
+
+    private void start() {
+        if (set != null && set.isRunning()) return;
+        Integer position = positionQueue.poll();
+        if (position == null) return;
         animator = ObjectAnimator.ofFloat(ballView, "targetTranslationX", 0, getTranslationDimension(position));
         animator.setInterpolator(new DecelerateInterpolator());
         animator.setDuration(time);
 
         animatorSource = ObjectAnimator.ofFloat(ballView, "sourceTranslationX", 0, getTranslationDimension(position));
-        animatorSource.setInterpolator(Math.abs(getTranslationDimension(position)) > info.getDotCenterDistance() * 2 ? new OvershootInterpolator(0.8f): new OvershootInterpolator(1.1f));
+        animatorSource.setInterpolator(Math.abs(getTranslationDimension(position)) > info.getDotCenterDistance() * 2 ? new OvershootInterpolator(0.8f) : new OvershootInterpolator(1.1f));
         animatorSource.setStartDelay((long) (time * 0.8f));
         animatorSource.setDuration(time);
 
@@ -87,6 +100,8 @@ public class SelectedStickyBall implements ISelectedView, Animator.AnimatorListe
         ballView.updateSourceCache();
         ballView.updateTargetCache();
         ballView.setSourceRadius(info.getDotRadius());
+        set = null;
+        start();
     }
 
     @Override
