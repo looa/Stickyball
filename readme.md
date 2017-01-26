@@ -8,8 +8,6 @@ SI is the sticky ball indicator. It is divided into two parts. It is divided int
 gradle ...
 ````
 
-The time interval for changing the current item is 540 ms.
-
 XML
 ````xml
 <org.looa.stickyballview.widget.DotIndicatorView
