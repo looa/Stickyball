@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
@@ -18,7 +19,7 @@ import org.looa.stickyballview.utils.DimensionUtil;
  * Created by ran on 17/1/22.
  */
 
-public class DotIndicatorView extends RelativeLayout {
+public class DotIndicatorView extends RelativeLayout implements ViewPager.OnPageChangeListener {
 
     private final static int DEFAULT_COLOR_UNSELECTED = Color.parseColor("#a9a9a9");
     private final static int DEFAULT_COLOR_SELECTED = Color.parseColor("#444444");
@@ -194,5 +195,20 @@ public class DotIndicatorView extends RelativeLayout {
         if (mode == MeasureSpec.AT_MOST)
             result = paddingLeft + paddingRight + dotRadius * 2 + (dotCount - 1) * dotCenterDistance;
         return result;
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        setCurrentItem(position);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 }
