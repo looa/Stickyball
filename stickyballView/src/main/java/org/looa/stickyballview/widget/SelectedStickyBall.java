@@ -58,16 +58,17 @@ public class SelectedStickyBall implements ISelectedView, Animator.AnimatorListe
         if (set != null && set.isRunning()) return;
         Integer position = positionQueue.poll();
         if (position == null) return;
-        animator = ObjectAnimator.ofFloat(ballView, "targetTranslationX", 0, getTranslationDimension(position));
+        boolean isGoRight = prePosition < position;
+        animator = ObjectAnimator.ofFloat(ballView, isGoRight ? "targetTranslationX" : "sourceTranslationX", 0, getTranslationDimension(position));
         animator.setInterpolator(new DecelerateInterpolator());
         animator.setDuration(time);
 
-        animatorSource = ObjectAnimator.ofFloat(ballView, "sourceTranslationX", 0, getTranslationDimension(position));
+        animatorSource = ObjectAnimator.ofFloat(ballView, isGoRight ? "sourceTranslationX" : "targetTranslationX", 0, getTranslationDimension(position));
         animatorSource.setInterpolator(Math.abs(getTranslationDimension(position)) > info.getDotCenterDistance() * 2 ? new OvershootInterpolator(0.8f) : new OvershootInterpolator(1.1f));
         animatorSource.setStartDelay((long) (time * 0.8f));
         animatorSource.setDuration(time);
 
-        animatorSourceScale = ObjectAnimator.ofFloat(ballView, "sourceRadius", info.getDotRadius(), 0);
+        animatorSourceScale = ObjectAnimator.ofFloat(ballView, isGoRight ? "sourceRadius" : "targetRadius", info.getDotRadius(), 0);
         animatorSourceScale.setInterpolator(new DecelerateInterpolator());
         animatorSourceScale.setDuration(time + (long) (time * 0.8f));
 
@@ -100,6 +101,7 @@ public class SelectedStickyBall implements ISelectedView, Animator.AnimatorListe
         ballView.updateSourceCache();
         ballView.updateTargetCache();
         ballView.setSourceRadius(info.getDotRadius());
+        ballView.setTargetRadius(info.getDotRadius());
         set = null;
         start();
     }
@@ -123,6 +125,8 @@ public class SelectedStickyBall implements ISelectedView, Animator.AnimatorListe
 
     @Override
     public void onTargetTranslation(float dX, float dY) {
-
+        if (Math.abs(dX) >= Math.abs(translationX) || Math.abs(dY) >= Math.abs(translationX)) {
+            ballView.setTargetRadius(info.getDotRadius());
+        }
     }
 }
